@@ -43,7 +43,7 @@ class CryptsyAuth(AuthBase):
     return r
 
 
-class CryptsyAPI:
+class CryptsyAPI(object):
   def __init__(self, key, secret, simulation=False, cached=False):
     self.url = 'https://api.cryptsy.com/api'
     self.key = key
@@ -71,7 +71,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'getinfo'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('getinfo')
     return self.cache[keycache]
 
@@ -81,7 +81,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'getmarkets'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('getmarkets')
     return self.cache[keycache]
 
@@ -91,7 +91,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'getcoindata'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('getcoindata')
     return self.cache[keycache]
 
@@ -101,7 +101,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'getwalletstatus'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('getwalletstatus')
     return self.cache[keycache]
 
@@ -111,7 +111,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'mytransactions'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('mytransactions')
     return self.cache[keycache]  
 
@@ -121,7 +121,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'markettrades'+str(marketid)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'marketid': marketid
       }
@@ -134,7 +134,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'marketorders'+str(marketid)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'marketid': marketid
       }
@@ -147,7 +147,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'mytrades'+str(marketid)+str(limit)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'marketid': marketid,
         'limit': limit
@@ -161,7 +161,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'allmytrades'+str(startdate)+str(enddate)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'startdate': startdate,
         'enddate': enddate
@@ -175,7 +175,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'myorders'+str(marketid)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'marketid': marketid
       }
@@ -188,7 +188,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'depth'+str(marketid)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'marketid': marketid
       }
@@ -201,16 +201,16 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'allmyorders'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('allmyorders')
     return self.cache[keycache]
 
 
-  def createorder(self, marketid, ordertype, quantity, price, simulated=None):
-    if simulated == None:
-      simulated = self.simulated
+  def createorder(self, marketid, ordertype, quantity, price, simulation=None):
+    if simulation == None:
+      simulation = self.simulation
 
-    if simulated == False:
+    if simulation == False:
       args = {
         'marketid': marketid,
         'ordertype': ordertype,
@@ -223,11 +223,11 @@ class CryptsyAPI:
     return r
 
 
-  def cancelorder(self, orderid, simulated=None):
-    if simulated == None:
-      simulated = self.simulated
+  def cancelorder(self, orderid, simulation=None):
+    if simulation == None:
+      simulation = self.simulation
 
-    if simulated == False:
+    if simulation == False:
       args = {
         'orderid': orderid,
       }
@@ -237,11 +237,11 @@ class CryptsyAPI:
     return r
 
 
-  def cancelmarketorders(self, marketid, simulated=None):
-    if simulated == None:
-      simulated = self.simulated
+  def cancelmarketorders(self, marketid, simulation=None):
+    if simulation == None:
+      simulation = self.simulation
 
-    if simulated == False:
+    if simulation == False:
       args = {
         'marketid': marketid
       }
@@ -251,22 +251,22 @@ class CryptsyAPI:
     return r
 
 
-  def cancelallorders(self, simulated=None):
-    if simulated == None:
-      simulated = self.simulated
+  def cancelallorders(self, simulation=None):
+    if simulation == None:
+      simulation = self.simulation
 
-    if simulated == False:
+    if simulation == False:
       r = self.request('cancelallorders')
     else:
       r = None
     return r
 
 
-  def calculatefees(self, ordertype, quantity, price, simulated=None):
-    if simulated == None:
-      simulated = self.simulated
+  def calculatefees(self, ordertype, quantity, price, simulation=None):
+    if simulation == None:
+      simulation = self.simulation
 
-    if simulated == False:
+    if simulation == False:
       args = {
         'ordertype': ordertype,
         'quantity': quantity,
@@ -287,16 +287,16 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'mytransfers'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('mytransfers')
     return self.cache[keycache]
 
 
-  def makewithdrawal(self, address, amount, simulated=None):
-    if simulated == None:
-      simulated = self.simulated
+  def makewithdrawal(self, address, amount, simulation=None):
+    if simulation == None:
+      simulation = self.simulation
 
-    if simulated == False:
+    if simulation == False:
       args = {
         'address': address,
         'amount': amount
@@ -312,7 +312,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'getmydepositaddresses'
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       self.cache[keycache] = self.request('getmydepositaddresses')
     return self.cache[keycache]
 
@@ -322,7 +322,7 @@ class CryptsyAPI:
       cached = self.cached
 
     keycache = 'getorderstatus'+str(orderid)
-    if cached == False or self.cached.has_key(keycache) == False:
+    if cached == False or self.cache.has_key(keycache) == False:
       args = {
         'orderid': orderid
       }
@@ -337,12 +337,12 @@ class CryptsyAPI:
     return None
 
 
-  def order_buy(self, primary, secondary, quantity, price, simulated=None):
-    return self.createorder(self.getmarket(primary, secondary)['marketid'], 'Buy', quantity, price, simulated=simulated)
+  def order_buy(self, primary, secondary, quantity, price, simulation=None):
+    return self.createorder(self.getmarket(primary, secondary)['marketid'], 'Buy', quantity, price, simulation=simulation)
 
 
-  def order_sell(self, primary, secondary, quantity, price, simulated=None):
-    return self.createorder(self.getmarket(primary, secondary)['marketid'], 'Sell', quantity, price, simulated=simulated)
+  def order_sell(self, primary, secondary, quantity, price, simulation=None):
+    return self.createorder(self.getmarket(primary, secondary)['marketid'], 'Sell', quantity, price, simulation=simulation)
 
 
 
